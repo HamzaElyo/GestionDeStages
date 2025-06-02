@@ -11,7 +11,7 @@ userId:{
     autoIncrement : true
 }, 
 nom: DataTypes.STRING,
-prénom: DataTypes.STRING,
+prenom: DataTypes.STRING,
 email: {
     type :DataTypes.STRING,
     unique : true

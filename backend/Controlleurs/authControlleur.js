@@ -3,51 +3,78 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const validateRegisterInput = require('../validation/register');
 const validateLoginInput = require('../validation/login');
-const db = require('../db/db');
+const db = require('../models/index');
 
 
 
+exports.signup = async (req, res) => {
+  const { errors, isValid } = validateRegisterInput(req.body);
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
 
-exports.signup = async (req, res)  =>{
-    const {errors, isValid } = validateRegisterInput(req.body);
-    if (!isValid) {
-        return res.status(400).json(errors);
+  const { email, password, nom, prenom, role } = req.body;
+
+  try {
+    // Vérifie si un utilisateur avec le même email existe déjà
+    const existingUser = await db.User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(409).json({ message: "L'utilisateur existe déjà" });
     }
 
-    const { username, password, ...rest } = req.body;
-     try {
-        const existingUser = await db.User.findOne({ where: { username } });
-        if (existingUser) {
-            return res.status(409).json({ message: "L'utilisateur existe déjà" });
-        }
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await db.User.create({
-            ...rest,
-            username,
-            password: hashedPassword
-        });
-        jwt.sign(
-                payload,
-                keys.secretOrkey, 
-                {expiresIn: 3600 },
-                (err, token)=>{
-                    res.json({
-                        user,
-                        success : true,
-                        token : 'Bearer ' + token
-                    });
-                });
+    // Hash du mot de passe
+    const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Création du nouvel utilisateur
+    const newUser = await db.User.create({
+      email,
+      pwd: hashedPassword,         // 🔐 on stocke dans le champ `pwd` (pas `password`)
+      nom,
+      prenom,
+      role,
+      dateInscription: new Date(),
+      actif: true
+    });
+
+    // Préparation du payload JWT
+    const payload = {
+      id: newUser.userId,
+      email: newUser.email,
+      nom: newUser.nom,
+      role: newUser.role
+    };
+
+    // Génération du token
+    jwt.sign(
+      payload,
+      process.env.secretOrkey || "default_secret",
+      { expiresIn: 3600 },
+      (err, token) => {
+        if (err) throw err;
+
+        res.status(201).json({
+          success: true,
+          user: {
+            userId: newUser.userId,
+            nom: newUser.nom,
+            prenom: newUser.prenom,
+            email: newUser.email,
+            role: newUser.role,
+            dateInscription: newUser.dateInscription
+          },
+          token: "Bearer " + token
+        });
+      }
+    );
   } catch (error) {
     const statusCode = error.name === 'SequelizeValidationError' ? 400 : 500;
     res.status(statusCode).json({
-      message: error.message || "Erreur lors de la création du compte",
-      errors: error.errors?.map(err => err.message)
+      message: "Erreur lors de la création du compte",
+      error: error.message,
+      details: error.errors?.map(err => err.message)
     });
   }
-
-   
-}
+};
 
 
 exports.login = async (req, res) =>{
@@ -61,10 +88,8 @@ exports.login = async (req, res) =>{
     const email = req.body.email;
     const password = req.body.password;
     try {
-        const user = await db.User.findAll({ 
+        const user = await db.User.findOne({ 
         where: { email},
-        logging : console.log
-      //attributes: ['id', 'password', 'username', 'ecole'] 
         });
         if (!user) {
             return res.status(401).json({ message: "Identifiants invalides" });
@@ -75,12 +100,17 @@ exports.login = async (req, res) =>{
         }
         
         //User Matched
-        const payload= { id : user.id, name: user.name , avatar : user.avatar}
+        const payload = {
+                        id: user.userId,
+                        email: user.email,
+                        nom: user.nom,
+                        role: user.role
+                        };
 
         //Sign Token
         jwt.sign(
             payload,
-            keys.secretOrkey, 
+            process.env.secretOrkey, 
             {expiresIn: 3600 },
             (err, token)=>{
                 res.json({

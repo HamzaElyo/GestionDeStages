@@ -9,11 +9,11 @@ const authRoutes = require('./routes/authRoutes');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Synchronisation des modèles avec la base de données
-db.sequelize.sync({ alter: true })
+//Synchronisation des modèles avec la base de données
+/*db.sequelize.sync({ alter: true })
   .then(() => console.log('La base de données a été synchronisée.'))
   .catch(err => console.error('Erreur lors de la synchronisation de la base de données:', err));
-
+*/
 // Route de base
 app.get('/', (req, res) => {
   res.json({ message: 'Bienvenue sur l\'API de Gestion de stages!' });
