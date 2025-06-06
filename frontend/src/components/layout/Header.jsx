@@ -15,7 +15,7 @@ const Header = () => {
     <header className="bg-primary text-white shadow-sm">
       <div className="container d-flex justify-content-between align-items-center py-3">
         <Link to="/" className="text-white text-decoration-none">
-          <h1 className="m-0">Gestionnaire de Stages</h1>
+          <h1 className="m-0">JobConnect</h1>
         </Link>
         
         <div className="d-flex align-items-center">
@@ -34,10 +34,16 @@ const Header = () => {
               </button>
             </>
           ) : (
-            <Link to="/login" className="btn btn-light">
-              Connexion
-            </Link>
+            <>
+              <Link to="/login" className="btn btn-light me-2">
+                Se Connecter
+              </Link>
+              <Link to="/register" className="btn btn-light">
+                Créer un compte
+              </Link>
+            </>
           )}
+
         </div>
       </div>
     </header>

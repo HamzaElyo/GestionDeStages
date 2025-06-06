@@ -28,9 +28,8 @@ export const StageProvider = ({ children }) => {
         setLoading(false);
       }
     };
-  useEffect(() => {
-    if (user) fetchStages();
-  }, [user]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {  if (user) fetchStages();}, [user]);
 
   const value = {
     stages,

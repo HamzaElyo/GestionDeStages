@@ -38,7 +38,6 @@ export const AuthProvider = ({ children }) => {
     const response = await api.post('/auth/login', credentials);
     const token = response.data.token.replace('Bearer ', '');
     localStorage.setItem('token', token);
-    
     const decodedUser = decodeToken(token);
     setUser({
       id: decodedUser.id,

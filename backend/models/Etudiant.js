@@ -11,7 +11,7 @@ const Etudiant = sequelize.define('etudiant',{
         allowNull : false
     }, 
     niveau : DataTypes.STRING, 
-    filière : DataTypes.STRING, 
+    filiere : DataTypes.STRING, 
     cv: DataTypes.STRING, 
     lettreMotivation : DataTypes.STRING
 

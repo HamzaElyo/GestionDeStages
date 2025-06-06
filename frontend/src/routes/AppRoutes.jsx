@@ -1,6 +1,6 @@
 // src/routes/AppRoutes.jsx
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
 import LoginPage from '../pages/auth/LoginPage';
 import RegisterPage from '../pages/auth/RegisterPage';
@@ -13,6 +13,7 @@ import AdminDashboard from '../pages/admin/Dashboard';
 import Users from '../pages/admin/Users';
 import Stats from '../pages/admin/Stats';
 import Unauthorized from '../pages/public/Unauthorised'; // Créez ce composant
+import HomePage from '../pages/public/HomePage';
 import CompanyApplications from '../pages/company/Applications';
 
 const AppRoutes = () => {
@@ -24,7 +25,7 @@ const AppRoutes = () => {
       <Route path="/unauthorized" element={<Unauthorized />} />
       
       {/* Redirection par défaut */}
-      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/" element={<HomePage />} />
       
       {/* Espace étudiant */}
       <Route path="/student/dashboard" element={

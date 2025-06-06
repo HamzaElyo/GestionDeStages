@@ -4,7 +4,7 @@ const {DataTypes} = require('sequelize');
 
 
 const Entreprise = sequelize.define('entreprise',{
-    entrpriseId:{
+    entrepriseId:{
         type : DataTypes.INTEGER,
         primaryKey : true,
         autoIncrement: true,

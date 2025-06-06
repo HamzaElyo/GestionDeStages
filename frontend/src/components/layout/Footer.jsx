@@ -6,7 +6,7 @@ const Footer = () => {
       <div className="container">
         <div className="row">
           <div className="col-md-6">
-            <h5>Gestionnaire de Stages</h5>
+            <h5>JobConnect</h5>
             <p className="mb-0">
               Plateforme de gestion des stages en entreprise
             </p>

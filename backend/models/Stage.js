@@ -12,7 +12,7 @@ const Stage = sequelize.define('stage',{
     }, 
     titre: DataTypes.STRING, 
     description: DataTypes.STRING, 
-    dateDébut: DataTypes.DATE, 
+    dateDebut: DataTypes.DATE, 
     dateFin: DataTypes.DATE, 
     status : DataTypes.BOOLEAN, 
     commentaire : DataTypes.STRING

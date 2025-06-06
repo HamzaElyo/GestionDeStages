@@ -19,7 +19,8 @@ email: {
 pwd : DataTypes.STRING,
 role : DataTypes.STRING,
 dateInscription : DataTypes.DATE,
-actif: DataTypes.BOOLEAN
+actif: DataTypes.BOOLEAN, 
+photo : DataTypes.STRING
 },
 {
     tableName : 'user',

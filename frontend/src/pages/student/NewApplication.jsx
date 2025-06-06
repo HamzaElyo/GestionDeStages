@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button, Spinner, Alert } from 'react-bootstrap';
 import { useAuth } from '../../contexts/AuthContext';
 import studentService from '../../services/studentService';
+import companyService from '../../services/companyService'; 
 
 const NewApplication = () => {
   const { user } = useAuth();
@@ -42,7 +43,7 @@ const NewApplication = () => {
 
   // Charger les entreprises (à implémenter)
   useEffect(() => {
-    // companyService.getCompanies().then(setCompanies);
+     companyService.getCompanies().then(setCompanies);
   }, []);
 
   return (

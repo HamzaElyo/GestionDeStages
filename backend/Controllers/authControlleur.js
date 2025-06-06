@@ -5,38 +5,73 @@ const validateRegisterInput = require('../validation/register');
 const validateLoginInput = require('../validation/login');
 const db = require('../models/index');
 
-
-
 exports.signup = async (req, res) => {
   const { errors, isValid } = validateRegisterInput(req.body);
   if (!isValid) {
     return res.status(400).json(errors);
   }
 
-  const { email, password, nom, prenom, role } = req.body;
+  const {
+    email, password, nom, prenom, role, photo,
+    niveau, filiere, nomEntreprise, secteur,
+    adresse, siteWeb, description, fonction
+  } = req.body;
 
   try {
-    // Vérifie si un utilisateur avec le même email existe déjà
+    // Vérifier l'existence de l'utilisateur
     const existingUser = await db.User.findOne({ where: { email } });
     if (existingUser) {
       return res.status(409).json({ message: "L'utilisateur existe déjà" });
     }
 
-    // Hash du mot de passe
+    // Hachage du mot de passe
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Création du nouvel utilisateur
+    // Création de l'utilisateur principal
     const newUser = await db.User.create({
       email,
-      pwd: hashedPassword,         // 🔐 on stocke dans le champ `pwd` (pas `password`)
+      pwd: hashedPassword,
       nom,
       prenom,
       role,
       dateInscription: new Date(),
-      actif: true
+      actif: true,
+      photo
     });
 
-    // Préparation du payload JWT
+    // Création des entités spécifiques selon le rôle
+    if (role === 'etudiant') {
+      await db.Etudiant.create({
+        userId: newUser.userId,
+        niveau,
+        filiere,
+        cv: req.files?.cv?.[0]?.filename || null,
+        lettreMotivation: req.files?.lettreMotivation?.[0]?.filename || null
+      });
+    } else if (role === 'entreprise') {
+      await db.Entreprise.create({
+        userId: newUser.userId,
+        nom: nomEntreprise,
+        secteur,
+        adresse,
+        siteWeb,
+        description
+      });
+    } else if (role === 'tuteur') {
+      // On suppose ici que l’entreprise existe déjà
+      const entreprise = await db.Entreprise.findOne({ where: { nom: nomEntreprise } });
+      if (!entreprise) {
+        return res.status(400).json({ message: "Entreprise non trouvée pour le tuteur" });
+      }
+
+      await db.Tuteur.create({
+        userId: newUser.userId,
+        entrepriseId: entreprise.id,
+        fonction
+      });
+    }
+
+    // Génération du token
     const payload = {
       id: newUser.userId,
       email: newUser.email,
@@ -44,7 +79,6 @@ exports.signup = async (req, res) => {
       role: newUser.role
     };
 
-    // Génération du token
     jwt.sign(
       payload,
       process.env.secretOrkey || "default_secret",
@@ -75,6 +109,7 @@ exports.signup = async (req, res) => {
     });
   }
 };
+
 
 
 exports.login = async (req, res) =>{

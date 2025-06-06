@@ -1,11 +1,22 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const db=require('./models');
 require('dotenv').config();
 
 const authRoutes = require('./routes/authRoutes');
+const etudiantRoutes = require('./routes/etudiantRoutes');
+const entrepriseRoutes = require('./routes/entrepriseRoutes');
+const tuteurRoutes = require('./routes/tuteurRoutes');
+const stageRoutes = require('./routes/stageRoutes');
+const candidatureRoutes = require('./routes/candidatureRoutes');
+const userRoutes = require('./routes/userRoutes');
+const adminRoutes = require('./routes/AdminRoutes');
+
+
 
 // Middleware
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -18,12 +29,18 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/', (req, res) => {
   res.json({ message: 'Bienvenue sur l\'API de Gestion de stages!' });
 });
-app.use('/auth', authRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/etudiants', etudiantRoutes);
+app.use('/api/entreprises', entrepriseRoutes);
+app.use('/api/tuteurs', tuteurRoutes);
+app.use('/api/stages', stageRoutes);
+app.use('/api/candidatures', candidatureRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/admin', adminRoutes);
 // Gestion des routes non trouvées
 app.use((req, res) => {
   res.status(404).json({ message: 'Route non trouvée' });
 });
-
 // Gestion globale des erreurs
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -34,7 +51,7 @@ app.use((err, req, res, next) => {
 });
 
 // Démarrage du serveur
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Serveur en cours d'exécution sur le port ${PORT}`);
 });
