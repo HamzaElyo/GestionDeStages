@@ -8,13 +8,14 @@ const Sidebar = () => {
   const location = useLocation();
   
   // Liens communs à tous les rôles
-  const commonLinks = [
+  /*const commonLinks = [
     { path: '/dashboard', label: 'Tableau de bord', icon: 'bi-speedometer2' }
-  ];
+  ];*/
   
   // Liens spécifiques par rôle
   const roleLinks = {
     etudiant: [
+      { path: 'student/dashboard', label: 'Tableau de bord', icon: 'bi-speedometer2' },
       { path: '/student/applications', label: 'Mes candidatures', icon: 'bi-file-earmark-text' },
       { path: '/student/new-application', label: 'Nouvelle candidature', icon: 'bi-plus-circle' }
     ],
@@ -29,7 +30,7 @@ const Sidebar = () => {
   };
   
   const currentLinks = [
-    ...commonLinks,
+    //...commonLinks,
     ...(roleLinks[user?.role] || [])
   ];
 

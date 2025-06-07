@@ -4,12 +4,19 @@ import Sidebar from './Sidebar';
 import Footer from './Footer';
 
 const MainLayout = ({ children, isAuthenticated }) => {
+  console.log("isAuthenticated :", isAuthenticated); // log bien placé
+
   return (
     <div className="d-flex flex-column min-vh-100">
       <Header />
 
       <div className="d-flex flex-grow-1">
-        {isAuthenticated && <Sidebar />}
+        {isAuthenticated && (
+          <div style={{ width: '250px', backgroundColor: '#f8f9fa' }}>
+            <Sidebar />
+          </div>
+        )}
+
         <main className={`flex-grow-1 p-4 bg-light ${!isAuthenticated ? 'w-100' : ''}`}>
           {children}
         </main>

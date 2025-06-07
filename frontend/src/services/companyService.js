@@ -1,8 +1,11 @@
 import api from './api';
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
+  getCompanies: () => {
+    return api.get('/entreprises'); // <-- Assure-toi que ce endpoint existe côté backend
+  },
   getCompanyApplications: (companyId) => {
-    // À remplacer par votre endpoint réel
     return api.get(`/entreprise/${companyId}/applications`);
   },
   updateApplicationStatus: (applicationId, status, comment) => {

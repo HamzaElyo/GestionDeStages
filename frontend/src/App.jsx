@@ -4,15 +4,25 @@ import { AuthProvider } from './contexts/AuthContext';
 import { StageProvider } from './contexts/StageContext';
 import MainLayout from './components/layout/MainLayout';
 import AppRoutes from './routes/AppRoutes';
+import { useAuth } from './contexts/AuthContext';
+
+// ✅ Ce composant est utilisé à l'intérieur de AuthProvider
+const AppContent = () => {
+  const { user } = useAuth();
+
+  return (
+    <MainLayout isAuthenticated={!!user}>
+      <AppRoutes />
+    </MainLayout>
+  );
+};
 
 function App() {
   return (
     <AuthProvider>
       <StageProvider>
         <Router>
-          <MainLayout>
-            <AppRoutes />
-          </MainLayout>
+          <AppContent />
         </Router>
       </StageProvider>
     </AuthProvider>

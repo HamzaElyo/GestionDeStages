@@ -35,19 +35,31 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (credentials) => {
-    const response = await api.post('/auth/login', credentials);
-    const token = response.data.token.replace('Bearer ', '');
-    localStorage.setItem('token', token);
-    const decodedUser = decodeToken(token);
-    setUser({
-      id: decodedUser.id,
-      email: decodedUser.email,
-      nom: decodedUser.nom,
-      role: decodedUser.role
-    });
-    
-    return response.data;
+  const response = await api.post('/auth/login', credentials);
+  console.log('Login response:', response.data);
+
+  if (!response.data.token) {
+    throw new Error('Token non reçu');
+  }
+
+  // Enlever le préfixe "Bearer "
+  const token = response.data.token.replace('Bearer ', '');
+  localStorage.setItem('token', token);
+
+  const decodedUser = decodeToken(token);
+  if (!decodedUser) throw new Error('Erreur décodage token');
+
+  const userObj = {
+    id: decodedUser.id,
+    email: decodedUser.email,
+    nom: decodedUser.nom,
+    role: decodedUser.role
   };
+
+  setUser(userObj);
+  return userObj;
+};
+
 
   const register = async (userData) => {
     const response = await api.post('/auth/signup', userData);

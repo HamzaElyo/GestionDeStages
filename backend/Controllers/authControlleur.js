@@ -63,10 +63,9 @@ exports.signup = async (req, res) => {
       if (!entreprise) {
         return res.status(400).json({ message: "Entreprise non trouvée pour le tuteur" });
       }
-
       await db.Tuteur.create({
         userId: newUser.userId,
-        entrepriseId: entreprise.id,
+        entrepriseId: entreprise.entrepriseId,
         fonction
       });
     }

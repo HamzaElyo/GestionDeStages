@@ -11,24 +11,26 @@ const Dashboard = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    if (!user?.id) return;  // vérifier que user et user.id existent
+
     const fetchApplications = async () => {
       try {
-        if (user) {
-          // À remplacer par votre endpoint réel
-          const data = await studentService.getStudentApplications(user.id);
-          setApplications(data);
-          setLoading(false);
-        }
+        const data = await studentService.getStudentApplications(user.id);
+        console.log('Candidatures reçues:', data);
+        setApplications(data);
       } catch (err) {
-        setError('Erreur lors du chargement des candidatures');
+        console.error(err);
+        setError(err.Body);
+      } finally {
         setLoading(false);
       }
     };
 
     fetchApplications();
-  }, [user]);
+  }, [user?.id]);  // ne dépend que de user.id
 
-  // Calculer les statistiques
+
+
   const stats = {
     total: applications.length,
     pending: applications.filter(app => app.status === 'en attente').length,
@@ -105,26 +107,32 @@ const Dashboard = () => {
           </tr>
         </thead>
         <tbody>
-          {applications.slice(0, 5).map(app => (
-            <tr key={app.id}>
-              <td>{app.stage.titre}</td>
-              <td>{app.entreprise.nom}</td>
-              <td>{new Date(app.datePostulation).toLocaleDateString()}</td>
-              <td>
-                <Badge bg={
-                  app.status === 'validé' ? 'success' : 
-                  app.status === 'refusé' ? 'danger' : 'warning'
-                }>
-                  {app.status}
-                </Badge>
-              </td>
+          {applications.length === 0 ? (
+            <tr>
+              <td colSpan="4" className="text-center">Aucune candidature trouvée.</td>
             </tr>
-          ))}
+          ) : (
+            applications.slice(0, 5).map(app => (
+              <tr key={app.id}>
+                <td>{app.stage.titre}</td>
+                <td>{app.entreprise.nom}</td>
+                <td>{new Date(app.datePostulation).toLocaleDateString()}</td>
+                <td>
+                  <Badge bg={
+                    app.status === 'validé' ? 'success' : 
+                    app.status === 'refusé' ? 'danger' : 'warning'
+                  }>
+                    {app.status}
+                  </Badge>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </Table>
 
-      <div className="text-center mt-4">
-        <Button as={Link} to="/student/applications" variant="outline-primary">
+      <div hidden className="text-center mt-4">
+        <Button as={Link} to="/student/candidatures" variant="outline-primary">
           Voir toutes mes candidatures
         </Button>
       </div>

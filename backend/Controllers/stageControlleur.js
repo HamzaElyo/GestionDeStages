@@ -1,11 +1,19 @@
 const db = require('../models/index');
 const Stage = db.Stage;
+const Entreprise = db.Entreprise;
 
 exports.getAll = async (req, res) => {
   try {
-    const items = await Stage.findAll();
+    const items = await Stage.findAll({
+      include: {
+        model: Entreprise,
+        as: 'entreprise', // Assure-toi que 'as' correspond à l'alias défini dans les associations
+        attributes: ['entrepriseId', 'nom'] // On récupère uniquement ce qu’on veut afficher
+      }
+    });
     res.status(200).json(items);
   } catch (err) {
+    console.error("Erreur lors de la récupération des stages avec entreprises :", err);
     res.status(500).json({ message: err.message });
   }
 };

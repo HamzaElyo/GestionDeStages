@@ -11,20 +11,21 @@ const LoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
     try {
-      await login({ email, password });
-      
-      // Redirection basée sur le rôle
-      const role = localStorage.getItem('role');
-      if (role === 'etudiant') navigate('/student/dashboard');
-      else if (role === 'entreprise') navigate('/company/dashboard');
-      else if (role === 'admin') navigate('/admin/dashboard');
-      else navigate('/');
-      
+      const user = await login({ email, password });
+      console.log('Utilisateur connecté:', user);
+
+      if (user.role === 'etudiant') navigate('/student/dashboard');
+      else if (user.role === 'entreprise') navigate('/company/dashboard');
+      else if (user.role === 'admin') navigate('/admin/dashboard');
+      else setError('Rôle utilisateur inconnu');
     } catch (err) {
       setError('Identifiants incorrects');
     }
   };
+
+
 
   return (
     <form onSubmit={handleSubmit}>

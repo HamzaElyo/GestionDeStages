@@ -10,7 +10,9 @@ const Entreprise = sequelize.define('entreprise',{
         autoIncrement: true,
         allowNull : false
     }, 
-    nom : DataTypes.STRING,
+    nom : {
+        type :DataTypes.STRING,
+        unique: true},
     secteur: DataTypes.STRING,
     adresse : DataTypes.STRING,
     siteWeb : DataTypes.STRING,

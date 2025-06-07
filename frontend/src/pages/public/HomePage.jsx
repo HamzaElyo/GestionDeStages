@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { PATHS } from '../../utils/constants';
+import { useAuth } from '../../contexts/AuthContext';
 
 const HomePage = () => {
   const [showAnimation, setShowAnimation] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     setTimeout(() => setShowAnimation(true), 300);
@@ -36,16 +38,23 @@ const HomePage = () => {
             Connectez étudiants et entreprises pour des stages réussis. 
             Simplifiez le processus de candidature, de sélection et de suivi.
           </p>
+            {user ? (
+                <>
+                </>
+              ) : (
+                <>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center w-full sm:w-auto callAction">
+                    <Link to={PATHS.LOGIN} className="btn btn-primary w-full sm:w-auto text-center">
+                      Se connecter
+                    </Link>
+                    <p></p>
+                    <Link to={PATHS.REGISTER} className="btn btn-primary w-full sm:w-auto text-center">
+                      Créer un compte
+                    </Link>
+                  </div>
+                </>
+              )}
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center w-full sm:w-auto callAction">
-            <Link to={PATHS.LOGIN} className="btn btn-primary w-full sm:w-auto text-center">
-              Se connecter
-            </Link>
-            <p></p>
-            <Link to={PATHS.REGISTER} className="btn btn-primary w-full sm:w-auto text-center">
-              Créer un compte
-            </Link>
-          </div>
 
         </div>
 
