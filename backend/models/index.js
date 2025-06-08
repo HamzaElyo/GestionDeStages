@@ -30,6 +30,12 @@ Stage.belongsTo(Entreprise, {
   onDelete: 'SET NULL',
   onUpdate: 'CASCADE'
 })
+
+Stage.belongsTo(Tuteur, {
+  foreignKey: 'tuteurId',
+  onDelete: 'SET NULL',
+  onUpdate: 'CASCADE'
+  });
 // Associations Tuteur
 Tuteur.belongsTo(User, {
   foreignKey: 'userId',

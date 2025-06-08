@@ -15,6 +15,7 @@ import Stats from '../pages/admin/Stats';
 import Unauthorized from '../pages/public/Unauthorised'; // Créez ce composant
 import HomePage from '../pages/public/HomePage';
 import CompanyApplications from '../pages/company/Applications';
+import GestionStages from '../pages/company/StageManagement';
 
 const AppRoutes = () => {
   return (
@@ -58,6 +59,11 @@ const AppRoutes = () => {
       <Route path="/company/application/:id" element={
         <ProtectedRoute roles={['entreprise']}>
           <ApplicationDetail />
+        </ProtectedRoute>
+      } />
+      <Route path="/company/stages" element={
+        <ProtectedRoute roles={['entreprise']}>
+          <GestionStages/>
         </ProtectedRoute>
       } />
       

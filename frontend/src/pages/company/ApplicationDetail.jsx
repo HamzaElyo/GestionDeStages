@@ -15,9 +15,11 @@ const ApplicationDetail = () => {
   useEffect(() => {
     const fetchApplication = async () => {
       try {
-        const data = await companyService.getApplicationDetails(id);
+        const response = await companyService.getApplicationDetails(id);
+        const data = response.data;
+        console.log(data);
         setApplication(data);
-        setStatus(data.status);
+        setStatus(data.status || '');
         setComment(data.commentaireEntreprise || '');
         setLoading(false);
       } catch (err) {
@@ -39,6 +41,21 @@ const ApplicationDetail = () => {
     }
   };
 
+  const calculerDuree = () => {
+    if (!application?.Stage?.dateDebut || !application?.Stage?.dateFin) return null;
+
+    const debut = new Date(application.Stage.dateDebut);
+    const fin = new Date(application.Stage.dateFin);
+
+    if (isNaN(debut) || isNaN(fin)) return null;
+
+    const diffTime = Math.abs(fin - debut);
+    const diffWeeks = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 7));
+    return diffWeeks >= 0 ? diffWeeks : null;
+  };
+
+  const duree = calculerDuree();
+
   if (loading) {
     return (
       <div className="text-center mt-5">
@@ -56,33 +73,57 @@ const ApplicationDetail = () => {
       <Button variant="secondary" onClick={() => navigate(-1)} className="mb-3">
         Retour
       </Button>
-      
-      <h2>Candidature de {application.etudiant.nom} {application.etudiant.prenom}</h2>
-      
+
+      <h2>
+        Candidature de {application.etudiant?.user?.nom} {application.etudiant?.user?.prenom}
+      </h2>
+
       <Card className="mb-3">
         <Card.Body>
-          <Card.Title>{application.stage.titre}</Card.Title>
+          <Card.Title>{application.Stage.titre}</Card.Title>
           <Card.Text>
-            <strong>Description:</strong> {application.stage.description}
+            <strong>Description:</strong> {application.Stage.description}
           </Card.Text>
           <Card.Text>
-            <strong>Durée:</strong> {application.stage.duree} semaines
+            <strong>Durée:</strong> {duree !== null ? `${duree} semaines` : 'N/A'}
           </Card.Text>
           <Card.Text>
-            <strong>Date de début:</strong> {new Date(application.stage.dateDebut).toLocaleDateString()}
+            <strong>Date de début:</strong>{' '}
+            {application.Stage.dateDebut
+              ? new Date(application.Stage.dateDebut).toLocaleDateString()
+              : 'N/A'}
+          </Card.Text>
+           <Card.Text>
+            <strong> Tuteur :</strong> {application.Stage.tuteur.User.nom} {application.Stage.tuteur.User.prenom}
           </Card.Text>
           <Card.Text>
-            <strong>CV étudiant:</strong> 
-            <a href={application.etudiant.cv} target="_blank" rel="noreferrer" className="ms-2">
-              Télécharger
-            </a>
+            <strong> Etudiant :</strong> {application.etudiant.User.nom} {application.etudiant.User.prenom}
           </Card.Text>
           <Card.Text>
-            <strong>Lettre de motivation:</strong>
-            <a href={application.etudiant.lettreMotivation} target="_blank" rel="noreferrer" className="ms-2">
-              Télécharger
-            </a>
+            <strong> Filière :</strong> {application.etudiant.filiere} 
           </Card.Text>
+          {application.etudiant?.cv && (
+            <Card.Text>
+              <strong>CV étudiant:</strong>{' '}
+              <a href={application.etudiant.cv} target="_blank" rel="noreferrer" className="ms-2">
+                Télécharger
+              </a>
+            </Card.Text>
+          )}
+
+          {application.etudiant?.lettreMotivation && (
+            <Card.Text>
+              <strong>Lettre de motivation:</strong>{' '}
+              <a
+                href={application.etudiant.lettreMotivation}
+                target="_blank"
+                rel="noreferrer"
+                className="ms-2"
+              >
+                Télécharger
+              </a>
+            </Card.Text>
+          )}
         </Card.Body>
       </Card>
 

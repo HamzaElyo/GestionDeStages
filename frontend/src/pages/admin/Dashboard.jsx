@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Table, Spinner, Alert, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+//import { useAuth } from '../../contexts/AuthContext';
 import adminService from '../../services/adminService';
 
 const AdminDashboard = () => {
@@ -17,9 +17,8 @@ const AdminDashboard = () => {
           adminService.getStats(),
           adminService.getRecentUsers()
         ]);
-        
-        setStats(statsData);
-        setUsers(usersData);
+        setStats(statsData.data);
+        setUsers(usersData.data);
         setLoading(false);
       } catch (err) {
         setError('Erreur lors du chargement des données');
@@ -51,7 +50,7 @@ const AdminDashboard = () => {
         <div className="col-md-3">
           <Card className="text-center">
             <Card.Body>
-              <Card.Title>{stats.totalUsers}</Card.Title>
+              <Card.Title>{stats.users}</Card.Title>
               <Card.Text>Utilisateurs</Card.Text>
             </Card.Body>
           </Card>
@@ -59,7 +58,7 @@ const AdminDashboard = () => {
         <div className="col-md-3">
           <Card className="text-center">
             <Card.Body>
-              <Card.Title>{stats.activeUsers}</Card.Title>
+              <Card.Title>{stats.userActifs}</Card.Title>
               <Card.Text>Utilisateurs actifs</Card.Text>
             </Card.Body>
           </Card>
@@ -67,7 +66,7 @@ const AdminDashboard = () => {
         <div className="col-md-3">
           <Card className="text-center">
             <Card.Body>
-              <Card.Title>{stats.pendingApplications}</Card.Title>
+              <Card.Title>{stats.candidatures}</Card.Title>
               <Card.Text>Candidatures en attente</Card.Text>
             </Card.Body>
           </Card>
@@ -75,7 +74,7 @@ const AdminDashboard = () => {
         <div className="col-md-3">
           <Card className="text-center">
             <Card.Body>
-              <Card.Title>{stats.companies}</Card.Title>
+              <Card.Title>{stats.entreprises}</Card.Title>
               <Card.Text>Entreprises</Card.Text>
             </Card.Body>
           </Card>
@@ -101,7 +100,7 @@ const AdminDashboard = () => {
         </thead>
         <tbody>
           {users.map(user => (
-            <tr key={user.id}>
+            <tr key={user.userId}>
               <td>{user.nom} {user.prenom}</td>
               <td>{user.email}</td>
               <td>{user.role}</td>

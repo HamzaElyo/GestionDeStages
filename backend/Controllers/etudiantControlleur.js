@@ -15,13 +15,13 @@ exports.getCandidaturesByEtudiant = async (req, res) => {
     if (!etudiant) {
       return res.status(404).json({ message: "Étudiant non trouvé pour cet utilisateur." });
     }
-    console.log(etudiant.etudiantId);
+    //console.log(etudiant.etudiantId);
     // Récupérer les candidatures avec le bon etudiantId
     const candidatures = await Candidature.findAll({
       where: { etudiantId: etudiant.etudiantId },
       include: [
-        { model: Stage, as: 'stage' },
-        { model: Entreprise, as: 'entreprise' }
+        { model: Stage},
+        { model: Entreprise }
       ],
       order: [['datePostulation', 'DESC']]
     });

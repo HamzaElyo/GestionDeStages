@@ -12,7 +12,7 @@ const Stats = () => {
     const fetchStats = async () => {
       try {
         const data = await adminService.getDetailedStats();
-        setStats(data);
+        setStats(data.data);
         setLoading(false);
       } catch (err) {
         setError('Erreur lors du chargement des statistiques');

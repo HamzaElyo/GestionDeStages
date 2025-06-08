@@ -15,15 +15,17 @@ const Sidebar = () => {
   // Liens spécifiques par rôle
   const roleLinks = {
     etudiant: [
-      { path: 'student/dashboard', label: 'Tableau de bord', icon: 'bi-speedometer2' },
+      { path: '/student/dashboard', label: 'Tableau de bord', icon: 'bi-speedometer2' },
       { path: '/student/applications', label: 'Mes candidatures', icon: 'bi-file-earmark-text' },
       { path: '/student/new-application', label: 'Nouvelle candidature', icon: 'bi-plus-circle' }
     ],
     entreprise: [
+      { path: '/company/dashboard', label: 'Tableau de bord', icon: 'bi-speedometer2' },
       { path: '/company/applications', label: 'Candidatures reçues', icon: 'bi-inbox' },
-      { path: '/company/stages', label: 'Offres de stage', icon: 'bi-briefcase' }
+      { path: '/company/stages', label: 'Gestion des stages', icon: 'bi-briefcase' }
     ],
     admin: [
+      { path: '/admin/dashboard', label: 'Tableau de bord', icon: 'bi-speedometer2' },
       { path: '/admin/users', label: 'Utilisateurs', icon: 'bi-people' },
       { path: '/admin/stats', label: 'Statistiques', icon: 'bi-bar-chart' }
     ]

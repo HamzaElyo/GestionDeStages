@@ -114,7 +114,7 @@ const Dashboard = () => {
           ) : (
             applications.slice(0, 5).map(app => (
               <tr key={app.id}>
-                <td>{app.stage.titre}</td>
+                <td>{app.Stage.titre}</td>
                 <td>{app.entreprise.nom}</td>
                 <td>{new Date(app.datePostulation).toLocaleDateString()}</td>
                 <td>

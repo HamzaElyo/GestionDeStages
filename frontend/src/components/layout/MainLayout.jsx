@@ -4,8 +4,6 @@ import Sidebar from './Sidebar';
 import Footer from './Footer';
 
 const MainLayout = ({ children, isAuthenticated }) => {
-  console.log("isAuthenticated :", isAuthenticated); // log bien placé
-
   return (
     <div className="d-flex flex-column min-vh-100">
       <Header />

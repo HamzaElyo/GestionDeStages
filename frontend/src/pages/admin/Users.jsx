@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Spinner, Form } from 'react-bootstrap';
-import { useAuth } from '../../contexts/AuthContext';
+//import { useAuth } from '../../contexts/AuthContext';
 import adminService from '../../services/adminService';
 
 const Users = () => {
@@ -13,7 +13,7 @@ const Users = () => {
     const fetchUsers = async () => {
       try {
         const data = await adminService.getAllUsers();
-        setUsers(data);
+        setUsers(data.data);
         setLoading(false);
       } catch (err) {
         setError('Erreur lors du chargement des utilisateurs');
@@ -28,7 +28,7 @@ const Users = () => {
     try {
       const updatedUser = await adminService.updateUserStatus(userId, !currentStatus);
       setUsers(users.map(user => 
-        user.id === userId ? { ...user, actif: updatedUser.actif } : user
+        user.userId === userId ? { ...user, actif: updatedUser.data.user.actif } : user
       ));
     } catch (err) {
       setError('Erreur lors de la mise à jour');
@@ -38,7 +38,9 @@ const Users = () => {
   const filteredUsers = users.filter(user => 
     user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.prenom.toLowerCase().includes(searchTerm.toLowerCase())
+    user.prenom.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.dateInscription.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (loading) {
@@ -80,7 +82,7 @@ const Users = () => {
         </thead>
         <tbody>
           {filteredUsers.map(user => (
-            <tr key={user.id}>
+            <tr key={user.userId}>
               <td>{user.nom} {user.prenom}</td>
               <td>{user.email}</td>
               <td>{user.role}</td>
@@ -94,7 +96,7 @@ const Users = () => {
                 <Button
                   variant={user.actif ? 'danger' : 'success'}
                   size="sm"
-                  onClick={() => toggleUserStatus(user.id, user.actif)}
+                  onClick={() => toggleUserStatus(user.userId, user.actif)}
                 >
                   {user.actif ? 'Désactiver' : 'Activer'}
                 </Button>

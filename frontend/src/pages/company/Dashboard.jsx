@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Table, Badge, Button, Spinner } from 'react-bootstrap';
+import { Card, Table, Badge, Spinner } from 'react-bootstrap';
 import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom'; // ✅ Ajouté
 import companyService from '../../services/companyService';
 
 const CompanyDashboard = () => {
   const { user } = useAuth();
-  const navigate = useNavigate(); // ✅ Ajouté
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -16,7 +14,7 @@ const CompanyDashboard = () => {
       try {
         if (user) {
           const data = await companyService.getCompanyApplications(user.id);
-          setApplications(data);
+          setApplications(data.data);
           setLoading(false);
         }
       } catch (err) {
@@ -28,10 +26,7 @@ const CompanyDashboard = () => {
     fetchApplications();
   }, [user]);
 
-  const handleViewDetails = (applicationId) => {
-    navigate(`/company/applications/${applicationId}`); // ✅ Fonctionnalité
-  };
-
+ 
   const stats = {
     total: applications.length,
     pending: applications.filter(app => app.status === 'en attente').length,
@@ -84,14 +79,13 @@ const CompanyDashboard = () => {
             <th>Stage</th>
             <th>Date</th>
             <th>Statut</th>
-            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {applications.slice(0, 5).map(app => (
-            <tr key={app.id}>
-              <td>{app.etudiant.nom} {app.etudiant.prenom}</td>
-              <td>{app.stage.titre}</td>
+          {applications.map(app => (
+            <tr key={app.CandidatureId}>
+              <td>{app.etudiant.User.nom} {app.etudiant.User.prenom}</td>
+              <td>{app.Stage.titre}</td>
               <td>{new Date(app.datePostulation).toLocaleDateString()}</td>
               <td>
                 <Badge bg={
@@ -101,15 +95,7 @@ const CompanyDashboard = () => {
                   {app.status}
                 </Badge>
               </td>
-              <td>
-                <Button 
-                  variant="info" 
-                  size="sm"
-                  onClick={() => handleViewDetails(app.id)}
-                >
-                  Détails
-                </Button>
-              </td>
+              
             </tr>
           ))}
         </tbody>

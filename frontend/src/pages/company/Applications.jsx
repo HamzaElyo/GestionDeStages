@@ -13,7 +13,8 @@ const CompanyApplications = () => {
       if (user) {
         try {
           const data = await companyService.getCompanyApplications(user.id);
-          setApplications(data);
+          console.log(data.data);
+          setApplications(data.data);
           setLoading(false);
         } catch (error) {
           console.error(error);
@@ -50,9 +51,9 @@ const CompanyApplications = () => {
         </thead>
         <tbody>
           {applications.map(app => (
-            <tr key={app.id}>
-              <td>{app.etudiant.nom} {app.etudiant.prenom}</td>
-              <td>{app.stage.titre}</td>
+            <tr key={app.CandidatureId}>
+              <td>{app.etudiant.User.nom} {app.etudiant.User.prenom}</td>
+              <td>{app.Stage.titre}</td>
               <td>{new Date(app.datePostulation).toLocaleDateString()}</td>
               <td>
                 <Badge bg={
@@ -64,10 +65,10 @@ const CompanyApplications = () => {
               </td>
               <td>
                 <a 
-                  href={`/company/application/${app.id}`} 
+                  href={`/company/application/${app.CandidatureId}`} 
                   className="btn btn-sm btn-outline-primary"
                 >
-                  Voir détails
+                  Voir détails 
                 </a>
               </td>
             </tr>

@@ -6,12 +6,22 @@ export default {
     return api.get('/entreprises'); // <-- Assure-toi que ce endpoint existe côté backend
   },
   getCompanyApplications: (companyId) => {
-    return api.get(`/entreprise/${companyId}/applications`);
+    return api.get(`/entreprises/${companyId}/applications`);
   },
   updateApplicationStatus: (applicationId, status, comment) => {
-    return api.put(`/entreprise/applications/${applicationId}`, { status, comment });
-  },
+  const payload = {};
+  
+  if (status !== undefined && status !== null) {
+    payload.status = status;
+  }
+
+  if (comment !== undefined && comment !== null && comment.trim() !== '') {
+    payload.comment = comment;
+  }
+
+  return api.put(`/entreprises/applications/${applicationId}`, payload);
+},
   getApplicationDetails: (applicationId) => {
-    return api.get(`/entreprise/applications/${applicationId}`);
+    return api.get(`/entreprises/applications/${applicationId}`);
   },
 };

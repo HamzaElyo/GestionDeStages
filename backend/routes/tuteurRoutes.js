@@ -7,5 +7,6 @@ router.get('/:id', controller.getById);
 router.post('/', controller.create);
 router.put('/:id', controller.update);
 router.delete('/:id', controller.delete);
+router.get('/entreprise/:userId', controller.getTuteursByEntreprise);
 
 module.exports = router;
