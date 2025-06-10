@@ -26,9 +26,9 @@ exports.getCandidaturesByEtudiant = async (req, res) => {
       order: [['datePostulation', 'DESC']]
     });
 
-    if (!candidatures.length) {
+   /* if (!candidatures.length) {
       return res.status(500).json({ message: "Aucune candidature trouvée pour cet étudiant." });
-    }
+    }*/
 
     res.status(200).json(candidatures);
   } catch (error) {

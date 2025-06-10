@@ -21,8 +21,11 @@ const LoginForm = () => {
       else if (user.role === 'admin') navigate('/admin/dashboard');
       else setError('Rôle utilisateur inconnu');
     } catch (err) {
-      setError('Identifiants incorrects');
-    }
+  // Si err.msg n'existe pas, essaie err.message, sinon stringify l'erreur
+  const errorMessage = err?.msg || err?.message || JSON.stringify(err);
+  setError(errorMessage);
+}
+
   };
 
 

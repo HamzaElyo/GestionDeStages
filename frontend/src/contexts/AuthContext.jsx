@@ -35,47 +35,66 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (credentials) => {
-  const response = await api.post('/auth/login', credentials);
-  console.log('Login response:', response.data);
+  try {
+    const response = await api.post('/auth/login', credentials);
+    console.log('Login response:', response.data);
 
-  if (!response.data.token) {
-    throw new Error('Token non reçu');
-  }
+    if (!response.data.token) {
+      throw new Error('Token non reçu');
+    }
 
-  // Enlever le préfixe "Bearer "
-  const token = response.data.token.replace('Bearer ', '');
-  localStorage.setItem('token', token);
-
-  const decodedUser = decodeToken(token);
-  if (!decodedUser) throw new Error('Erreur décodage token');
-
-  const userObj = {
-    id: decodedUser.id,
-    email: decodedUser.email,
-    nom: decodedUser.nom,
-    role: decodedUser.role
-  };
-
-  setUser(userObj);
-  return userObj;
-};
-
-
-  const register = async (userData) => {
-    const response = await api.post('/auth/signup', userData);
+    // Enlever le préfixe "Bearer "
     const token = response.data.token.replace('Bearer ', '');
     localStorage.setItem('token', token);
-    
+
     const decodedUser = decodeToken(token);
-    setUser({
+    if (!decodedUser) throw new Error('Erreur décodage token');
+
+    const userObj = {
       id: decodedUser.id,
       email: decodedUser.email,
       nom: decodedUser.nom,
       role: decodedUser.role
-    });
-    
-    return response.data;
+    };
+
+    setUser(userObj);
+    return userObj;
+
+  } catch (error) {
+    // Extraire le message d'erreur envoyé par le backend (si axios)
+    const message = error.response?.data?.message || error.message || 'Erreur inconnue';
+    throw new Error(message);
+  }
+};
+
+
+
+  const register = async (userData) => {
+  // userData doit être un FormData (avec fichiers)
+  
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    }
   };
+  
+  const response = await api.post('/auth/signup', userData, config);
+  
+  // Token reçu dans response.data.token (ex: 'Bearer xxx')
+  const token = response.data.token.replace('Bearer ', '');
+  localStorage.setItem('token', token);
+
+  const decodedUser = decodeToken(token);
+  setUser({
+    id: decodedUser.id,
+    email: decodedUser.email,
+    nom: decodedUser.nom,
+    role: decodedUser.role
+  });
+
+  return response.data;
+};
+
 
   const logout = () => {
     localStorage.removeItem('token');

@@ -93,9 +93,12 @@ const ApplicationDetail = () => {
               ? new Date(application.Stage.dateDebut).toLocaleDateString()
               : 'N/A'}
           </Card.Text>
-           <Card.Text>
-            <strong> Tuteur :</strong> {application.Stage.tuteur.User.nom} {application.Stage.tuteur.User.prenom}
-          </Card.Text>
+          {application.Stage.tuteur && application.Stage.tuteur.User && (
+            <Card.Text>
+              <strong>Tuteur :</strong> {application.Stage.tuteur.User.nom} {application.Stage.tuteur.User.prenom}
+            </Card.Text>
+          )}
+
           <Card.Text>
             <strong> Etudiant :</strong> {application.etudiant.User.nom} {application.etudiant.User.prenom}
           </Card.Text>
@@ -105,21 +108,16 @@ const ApplicationDetail = () => {
           {application.etudiant?.cv && (
             <Card.Text>
               <strong>CV étudiant:</strong>{' '}
-              <a href={application.etudiant.cv} target="_blank" rel="noreferrer" className="ms-2">
+              <a href={`http://localhost:5000/${encodeURI(application.etudiant.cv)}`} target="_blank" rel="noreferrer" download>
                 Télécharger
               </a>
             </Card.Text>
           )}
-
           {application.etudiant?.lettreMotivation && (
             <Card.Text>
               <strong>Lettre de motivation:</strong>{' '}
               <a
-                href={application.etudiant.lettreMotivation}
-                target="_blank"
-                rel="noreferrer"
-                className="ms-2"
-              >
+                href={`http://localhost:5000/${encodeURI(application.etudiant.lettreMotivation)}`} target="_blank" rel="noreferrer" download>
                 Télécharger
               </a>
             </Card.Text>

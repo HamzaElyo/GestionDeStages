@@ -53,28 +53,38 @@ const RegisterForm = () => {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (files) {
-      setFormData({ ...formData, [name]: files[0] });
+    if (files && files.length > 0) {
+      setFormData(prev => ({ ...prev, [name]: files[0] }));
     } else {
-      setFormData({ ...formData, [name]: value });
+      setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData();
+
     Object.entries(formData).forEach(([key, value]) => {
-      if (value) data.append(key, value);
+      if (value) {
+        if ((key === 'cv' || key === 'lettreMotivation') && value instanceof File) {
+          data.append(key, value);
+        } else if (key === 'photo') {
+          // photo est une URL string
+          data.append(key, value);
+        } else if (typeof value === 'string') {
+          data.append(key, value);
+        }
+      }
     });
 
     try {
       await register(data);
 
-      if (data.role === 'etudiant') {
+      if (formData.role === 'etudiant') {
         navigate('/student/dashboard');
-      } else if (data.role === 'entreprise') {
+      } else if (formData.role === 'entreprise') {
         navigate('/company/dashboard');
-      } else if (data.role === 'tuteur') {
+      } else if (formData.role === 'tuteur') {
         navigate('/tuteur/dashboard');
       } else {
         navigate('/');
@@ -84,7 +94,6 @@ const RegisterForm = () => {
       console.error("Erreur:", err.response?.data);
       setError(err?.response?.data?.message || "Erreur lors de l'inscription");
     }
-
   };
 
   return (

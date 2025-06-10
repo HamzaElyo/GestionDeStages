@@ -78,7 +78,7 @@ const Stats = () => {
       
       <Card>
         <Card.Body>
-          <Card.Title>Répartition par filière</Card.Title>
+          <Card.Title>Répartition des Etudiants par filière</Card.Title>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={stats.studentsByField}>
               <XAxis dataKey="field" />

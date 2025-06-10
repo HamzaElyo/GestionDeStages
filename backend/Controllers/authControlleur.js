@@ -20,10 +20,11 @@ exports.signup = async (req, res) => {
   try {
     // Vérifier l'existence de l'utilisateur
     const existingUser = await db.User.findOne({ where: { email } });
-    if (existingUser) {
+    if (existingUser && existingUser.actif) {
       return res.status(409).json({ message: "L'utilisateur existe déjà" });
+    }else if (existingUser && !existingUser.actif) {
+      await existingUser.destroy();
     }
-
     // Hachage du mot de passe
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -41,13 +42,17 @@ exports.signup = async (req, res) => {
 
     // Création des entités spécifiques selon le rôle
     if (role === 'etudiant') {
+      const cvFilename = req.files?.cv?.[0]?.filename || null;
+      const lettreFilename = req.files?.lettreMotivation?.[0]?.filename || null;
+
       await db.Etudiant.create({
         userId: newUser.userId,
         niveau,
         filiere,
-        cv: req.files?.cv?.[0]?.filename || null,
-        lettreMotivation: req.files?.lettreMotivation?.[0]?.filename || null
+        cv: cvFilename,
+        lettreMotivation: lettreFilename
       });
+
     } else if (role === 'entreprise') {
       await db.Entreprise.create({
         userId: newUser.userId,
@@ -115,9 +120,9 @@ exports.login = async (req, res) =>{
     const {errors, isValid } = validateLoginInput(req.body);
 
     // check validation
-    if (!isValid) {
+    /*if (!isValid) {
         return res.status(400).json(errors);
-    }
+    }*/
 
     const email = req.body.email;
     const password = req.body.password;
@@ -132,7 +137,9 @@ exports.login = async (req, res) =>{
         if (!isPasswordValid) {
             return res.status(401).json({ message: "Identifiants invalides" });
         }
-        
+        if (!user.actif) {
+            return res.status(403).json({ message: "Compte inactif. Veuillez contacter l’administrateur." });
+        }
         //User Matched
         const payload = {
                         id: user.userId,

@@ -28,7 +28,7 @@ const HomePage = () => {
       >
         <div className={`max-w-4xl mx-auto text-center text-white transition-all duration-1000 ${showAnimation ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
-            <span className="block mb-2">Plateforme de</span>
+            <span className="block mb-2">Plateforme de </span>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">
               Gestion de Stages
             </span>
@@ -56,25 +56,7 @@ const HomePage = () => {
               )}
 
 
-        </div>
-
-        {/* Bulles animées */}
-        <div className="absolute inset-0 overflow-hidden">
-          {[...Array(15)].map((_, i) => (
-            <div 
-              key={i}
-              className="absolute rounded-full bg-blue-400 opacity-20"
-              style={{
-                width: `${Math.random() * 100 + 20}px`,
-                height: `${Math.random() * 100 + 20}px`,
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                animation: `float ${Math.random() * 20 + 10}s infinite ease-in-out`,
-                animationDelay: `${Math.random() * 5}s`
-              }}
-            ></div>
-          ))}
-        </div>
+        </div>  
       </div>
     </div>
   );

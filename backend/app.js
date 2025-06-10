@@ -2,6 +2,9 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const db=require('./models');
+const passport = require('passport');
+const path = require('path');
+require('./middlewares/passport')(passport);
 require('dotenv').config();
 
 const authRoutes = require('./routes/authRoutes');
@@ -19,6 +22,9 @@ const adminRoutes = require('./routes/AdminRoutes');
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(passport.initialize());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 //Synchronisation des modèles avec la base de données
 /*db.sequelize.sync({ alter: true })
