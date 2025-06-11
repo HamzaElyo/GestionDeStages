@@ -15,6 +15,7 @@ const Applications = () => {
     const fetchApplications = async () => {
       try {
         const data = await studentService.getStudentApplications(user.id);
+        console.log(data);
         setApplications(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error(err);
@@ -80,7 +81,7 @@ const Applications = () => {
                     {app.status}
                   </Badge>
                 </td>
-                <td>{app.commentaire || "Aucun commentaire"}</td> {/* Affichage commentaire */}
+                <td>{app.commentaireEntreprise || "Aucun commentaire"}</td> {/* Affichage commentaire */}
               </tr>
             ))
           )}

@@ -23,7 +23,7 @@ const Header = () => {
             <>
               <span className="me-3">
                 <i className="bi bi-person-circle me-2"></i>
-                {user.nom} ({user.role})
+                {user.nom} {user.prenom} ({user.role})
               </span>
               <button 
                 className="btn btn-outline-light"

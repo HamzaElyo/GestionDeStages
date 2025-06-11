@@ -14,12 +14,13 @@ const LoginForm = () => {
     setError('');
     try {
       const user = await login({ email, password });
-      console.log('Utilisateur connecté:', user);
+      
 
       if (user.role === 'etudiant') navigate('/student/dashboard');
       else if (user.role === 'entreprise') navigate('/company/dashboard');
       else if (user.role === 'admin') navigate('/admin/dashboard');
-      else setError('Rôle utilisateur inconnu');
+      else if (user.role === 'tutuer') navigate('/');
+      else navigate('/');
     } catch (err) {
   // Si err.msg n'existe pas, essaie err.message, sinon stringify l'erreur
   const errorMessage = err?.msg || err?.message || JSON.stringify(err);

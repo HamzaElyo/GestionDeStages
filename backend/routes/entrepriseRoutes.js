@@ -3,7 +3,7 @@ const router = express.Router();
 const controller = require('../Controllers/entrepriseControlleur');
 const passport = require('passport');
 
-router.get('/',passport.authenticate('jwt', {session : false}), controller.getAll);
+router.get('/', controller.getAll);
 router.get('/:id',passport.authenticate('jwt', {session : false}), controller.getById);
 router.post('/', controller.create);
 router.put('/:id',passport.authenticate('jwt', {session : false}), controller.update);

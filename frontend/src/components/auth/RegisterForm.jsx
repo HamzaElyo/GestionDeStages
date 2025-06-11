@@ -85,7 +85,7 @@ const RegisterForm = () => {
       } else if (formData.role === 'entreprise') {
         navigate('/company/dashboard');
       } else if (formData.role === 'tuteur') {
-        navigate('/tuteur/dashboard');
+        navigate('/');
       } else {
         navigate('/');
       }

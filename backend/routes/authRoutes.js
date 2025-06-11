@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../Controllers/authControlleur');
-const upload = require('../middlewares/upload'); // le fichier multer configuré
+const upload = require('../middlewares/upload')
+
 
 router.post('/signup',
   upload.fields([
@@ -10,5 +11,6 @@ router.post('/signup',
   ]),
   authController.signup
 );
+router.post('/login', authController.login);
 
 module.exports = router;
